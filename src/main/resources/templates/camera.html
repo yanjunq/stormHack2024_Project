@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Capture</title>
+    <style>
+        #videoContainer {
+            width: 50%;
+            margin: 0 auto;
+        }
+        video {
+            width: 100%;
+        }
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="videoContainer">
+    <video id="video" autoplay></video>
+</div>
+<button id="toggleButton">Toggle Camera</button>
+<button id="captureButton">Capture</button>
+<canvas id="canvas"></canvas>
+<script>
+    let videoStream;
+
+    const video = document.getElementById('video');
+    const toggleButton = document.getElementById('toggleButton');
+    const captureButton = document.getElementById('captureButton');
+    const canvas = document.getElementById('canvas');
+    const constraints = {
+        video: true
+    };
+
+    function startCamera() {
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                videoStream = stream;
+                video.srcObject = stream;
+            })
+            .catch((error) => {
+                console.error('Error accessing the camera:', error);
+            });
+    }
+
+    function stopCamera() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => {
+                track.stop();
+            });
+        }
+    }
+
+    toggleButton.addEventListener('click', () => {
+        if (videoStream) {
+            stopCamera();
+        } else {
+            startCamera();
+        }
+    });
+
+    captureButton.addEventListener('click', () => {
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    });
+
+    // Start the camera initially
+    startCamera();
+</script>
+</body>
+</html>
