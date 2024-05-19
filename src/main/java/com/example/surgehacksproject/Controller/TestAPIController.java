@@ -2,8 +2,7 @@ package com.example.surgehacksproject.Controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import  com.example.surgehacksproject.server;
-
+import  com.example.surgehacksproject.Server;
 
 
 @CrossOrigin(origins = "http://localhost:8080")
@@ -12,14 +11,11 @@ import  com.example.surgehacksproject.server;
 public class TestAPIController {
 
     @Autowired
-    private server;
+    private Server server ;
 
     @GetMapping("/search")
     public ResponseEntity<String> searchFood(@RequestParam String query) {
         return ResponseEntity.ok(server.searchFood(query));
     }
-
-
-    
 
 }

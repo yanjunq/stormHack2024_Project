@@ -1,11 +1,15 @@
+package com.example.surgehacksproject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+
 @Service
-public class server {
-    @Autowired
-    private RestTemplate restTemplate;
+public class Server {
+    @Bean
+    RestTemplate restTemplate;
 
     private final String BASE_URL = "https://api.nal.usda.gov/fdc/v1/";
     private final String API_KEY = "PPsaRbhlTSwLyq8paaYVmMidG7HW0EWj2PTh1sii";
@@ -20,3 +24,4 @@ public class server {
         return restTemplate.postForObject(url, jsonBody, String.class);
     }
 }
+
