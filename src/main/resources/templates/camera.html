@@ -23,6 +23,7 @@
 </div>
 <button id="toggleButton">Toggle Camera</button>
 <button id="captureButton">Capture</button>
+<button id="clear"
 <canvas id="canvas"></canvas>
 <script>
     let videoStream;
@@ -51,24 +52,26 @@
             videoStream.getTracks().forEach(track => {
                 track.stop();
             });
+            video.srcObject = null; // Release the video stream
+            videoStream = null;
         }
     }
 
     toggleButton.addEventListener('click', () => {
-        if (videoStream) {
-            stopCamera();
-        } else {
+        if (!videoStream) {
             startCamera();
+        } else {
+            stopCamera();
         }
     });
 
     captureButton.addEventListener('click', () => {
         const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.style.display = 'block'; // Show the canvas
     });
-
-    // Start the camera initially
-    startCamera();
 </script>
 </body>
 </html>
