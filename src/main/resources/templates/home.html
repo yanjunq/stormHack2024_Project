@@ -2,10 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Capture</title>
+    <style>
+        #videoContainer {
+            width: 50%;
+            margin: 0 auto;
+        }
+        video {
+            width: 100%;
+        }
+        canvas {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+<div id="videoContainer">
+    <video id="video" autoplay></video>
+</div>
+<button id="toggleButton">Toggle Camera</button>
+<button id="captureButton">Capture</button>
+<button id="clearButton">Clear</button>
+<canvas id="canvas"></canvas>
+<script>
+    let videoStream;
 
+    const video = document.getElementById('video');
+    const toggleButton = document.getElementById('toggleButton');
+    const captureButton = document.getElementById('captureButton');
+    const canvas = document.getElementById('canvas');
+    const clearButton = document.getElementById('clearButton');
+    const constraints = {
+        video: true
+    };
+
+    function startCamera() {
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                videoStream = stream;
+                video.srcObject = stream;
+            })
+            .catch((error) => {
+                console.error('Error accessing the camera:', error);
+            });
+    }
+
+    function stopCamera() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => {
+                track.stop();
+            });
+            video.srcObject = null; // Release the video stream
+            videoStream = null;
+        }
+    }
+
+    toggleButton.addEventListener('click', () => {
+        if (!videoStream) {
+            startCamera();
+        } else {
+            stopCamera();
+        }
+    });
+
+    captureButton.addEventListener('click', () => {
+        let myHeaders = new Headers();
+        myHeaders.append("apikey", "goT99dq1TO9XGVopwyVuoABejiC5Qaa8");
+
+
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.style.display = 'block'; // Show the canvas
+
+        imgData = canvas.toDataURL("image/png");
+
+        let formData = new FormData();
+        formData.append("image", imgData.)
+
+        let requestOptions = {
+            method: 'POST',
+            redirect: 'follow',
+            headers: myHeaders,
+            body: canvas
+        }
+
+        fetch("https://api.apilayer.com/image_to_text/upload", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+    });
+
+    clearButton.addEventListener('click', () => {
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.style.display = 'none';
+        console.log("hello");
+    });
+</script>
 </body>
 </html>

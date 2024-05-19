@@ -4,10 +4,43 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script type="text/javascript" src="Scripts/Script.js"></script>
-
-
 </head>
 <body>
-    Hello
+    <button id="getFood">Get Food</button>
+
+    <form action="/action_page.php">
+        <label for="foodname">Search Food:</label>
+        <input type="text" id="foodname" name="foodname"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
 </body>
+<script>
+
+        const getFoodButton = document.getElementById('getFood');
+        getFoodButton.addEventListener('click', () => {
+            let myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            const apiKey = "Fdx4QkozjOYrJrDhlljgGcfAu7G5crFMeOzE9k3m"; // Ensure this is secure
+            const url = `https://api.nal.usda.gov/fdc/v1/foods/list?api_key=${apiKey}`;
+
+            let requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            fetch(url, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
+                })
+                .catch(error => console.log('error', error));
+        });
+
+
+
+</script>
+
 </html>
